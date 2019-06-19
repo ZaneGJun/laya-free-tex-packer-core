@@ -3,7 +3,7 @@
   "displayName": "Free texture packer",
   "version": "0.2.1",
   "description": "Free texture packer core",
-  "url": "http://github.com/odrick/free-tex-packer-core",
+  "url": "https://github.com/ZaneGJun/laya-free-tex-packer-core",
   "main": "index.js",
   "scripts": {},
   "keywords": [
@@ -23,7 +23,7 @@
   "author": "Alexander Norinchak",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/odrick/free-tex-packer-core"
+    "url": "git+https://github.com/ZaneGJun/laya-free-tex-packer-core"
   },
   "license": "MIT",
   "dependencies": {
