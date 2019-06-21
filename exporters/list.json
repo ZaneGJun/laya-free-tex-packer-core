@@ -124,5 +124,14 @@
     "template": "UIKit.mst",
     "fileExt": "plist",
     "predefined": true
+  },
+  {
+    "type": "LayaBox",
+    "description": "LayaBox format",
+    "allowTrim": false,
+    "allowRotation": false,
+    "template": "LayaBox.mst",
+    "fileExt": "atlas",
+    "predefined": true
   }
 ]
