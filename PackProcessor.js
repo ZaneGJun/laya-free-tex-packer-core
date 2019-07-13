@@ -60,6 +60,13 @@ class PackProcessor {
         return rects;
     }
     
+    /**
+     * pack the input images
+     * @param {*} images 
+     * @param {*} options 
+     * @param {*} onComplete 
+     * @param {*} onError 
+     */
     static pack(images={}, options={}, onComplete=null, onError=null) {
 
         let rects = [];
@@ -69,6 +76,13 @@ class PackProcessor {
 
         let maxWidth = 0, maxHeight = 0;
         let minWidth = 0, minHeight = 0;
+
+        try{
+            let a = {};
+            console.log(a.b.c);
+        }catch(e){
+            console.error(e.stack);
+        }
 
         let names = Object.keys(images);
         

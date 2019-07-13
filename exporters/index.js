@@ -23,6 +23,7 @@ function prepareData(data, options) {
     opt.format = opt.format || "RGBA8888";
     opt.scale = opt.scale || 1;
     opt.base64Prefix = options.textureFormat == "png" ? "data:image/png;base64," : "data:image/jpeg;base64,";
+    opt.imagePrefix = options.imagePrefix;
 
     let ret = [];
 
@@ -77,6 +78,12 @@ function prepareData(data, options) {
     return {rects: ret, config: opt};
 }
 
+/**
+ * start create the pack exporter file
+ * @param {*} exporter 
+ * @param {*} data 
+ * @param {*} options 
+ */
 function startExporter(exporter, data, options) {
     let {rects, config} = prepareData(data, options);
     let renderOptions = {

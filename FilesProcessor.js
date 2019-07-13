@@ -7,13 +7,16 @@ let startExporter = require("./exporters/index").startExporter;
 class FilesProcessor {
     
     static start(images, options, callback, errorCallback) {
+        //pack images first
         PackProcessor.pack(images, options,
             (res) => {
                 let packResult = [];
                 let resFiles = [];
                 let readyParts = 0;
 
+                //Traversing all packed images
                 for(let data of res) {
+                    //create the image
                     new TextureRenderer(data, options, (renderResult) => {
                         packResult.push({
                             data: renderResult.data,
@@ -25,6 +28,7 @@ class FilesProcessor {
                             for(let item of packResult) {
                                 let fName = options.textureName + (packResult.length > 1 ? "-" + ix : "");
 
+                                //pack success, create the resutl item(atlas,plist...)
                                 FilesProcessor.processPackResultItem(fName, item, options, (files) => {
                                     resFiles = resFiles.concat(files);
                                     readyParts++;
@@ -44,11 +48,20 @@ class FilesProcessor {
             });
     }
     
+    /**
+     * pack the result
+     * @param {*} fName 
+     * @param {*} item 
+     * @param {*} options 
+     * @param {*} callback 
+     */
     static processPackResultItem(fName, item, options, callback) {
         let files = [];
 
         let pixelFormat = options.textureFormat == "png" ? "RGBA8888" : "RGB888";
         let mime = options.textureFormat == "png" ? Jimp.MIME_PNG : Jimp.MIME_JPEG;
+        let imagePrefix = fName.replace(options.inputPath + "\\", "") + "\\";
+        imagePrefix = (imagePrefix.trim().split("\\").join("/"));
 
         item.buffer.getBuffer(mime, (err, srcBuffer) => {
             FilesProcessor.tinifyImage(srcBuffer, options, (buffer) => {
@@ -64,9 +77,15 @@ class FilesProcessor {
                     base64Export: options.base64Export,
                     scale: options.scale,
                     appInfo: options.appInfo,
-                    trimMode: options.trimMode
+                    trimMode: options.trimMode,
+                    imagePrefix: imagePrefix
                 };
+
+                if(options.exporter.type == "LayaBox"){
+                    opts.imageName = opts.imageName.split('\\').pop();
+                }
                 
+                //call startExporter, create the export file
                 files.push({
                     name: fName + "." + options.exporter.fileExt,
                     buffer: new Buffer(startExporter(options.exporter, item.data, opts))
