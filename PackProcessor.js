@@ -70,6 +70,7 @@ class PackProcessor {
     static pack(images={}, options={}, onComplete=null, onError=null) {
 
         let rects = [];
+        let rectsArr = [[]];
 
         let padding = options.padding || 0;
         let extrude = options.extrude || 0;
@@ -77,34 +78,19 @@ class PackProcessor {
         let maxWidth = 0, maxHeight = 0;
         let minWidth = 0, minHeight = 0;
 
-        try{
-            let a = {};
-            console.log(a.b.c);
-        }catch(e){
-            console.error(e.stack);
-        }
-
+        // try{
+        //     let a = {};
+        //     console.log(a.b.c);
+        // }catch(e){
+        //     console.error(e.stack);
+        // }
+    
         let names = Object.keys(images);
-        
-        for(let key of names) {
-            let img = images[key];
 
-            maxWidth += img.width;
-            maxHeight += img.height;
-
-            if(img.width > minWidth) minWidth = img.width + padding*2 + extrude*2;
-            if(img.height > minHeight) minHeight = img.height + padding*2 + extrude*2;
-
-            rects.push({
-                frame: {x: 0, y: 0, w: img.width, h: img.height},
-                rotated: false,
-                trimmed: false,
-                spriteSourceSize: {x: 0, y: 0, w: img.width, h: img.height},
-                sourceSize: {w: img.width, h: img.height},
-                name: key,
-                image: img
-            });
-        }
+        //sort by image area
+        names.sort((a, b) => {
+            return images[a].area - images[b].area;
+        });
 
         let width = options.width || 0;
         let height = options.height || 0;
@@ -126,12 +112,47 @@ class PackProcessor {
 			height = ph;
         }
 
-        if(width < minWidth || height < minHeight) {
-            if(onError) onError({
-                description: "Invalid size. Min: " + minWidth + "x" + minHeight
+        
+        for(let key of names) {
+            let img = images[key];
+
+            maxWidth += img.width;
+            maxHeight += img.height;
+
+            if(img.width > minWidth) minWidth = img.width + padding*2 + extrude*2;
+            if(img.height > minHeight) minHeight = img.height + padding*2 + extrude*2;
+
+            //check is reach max
+            if(width < minWidth || height < minHeight) {
+                // if(onError) onError({
+                //     description: "Invalid size. Min: " + minWidth + "x" + minHeight
+                // });
+                // return;
+
+                //add new rect to rectsArr
+                rectsArr.push([]);
+
+                maxWidth = 0;
+                maxHeight = 0;
+                minWidth = 0;
+                minHeight = 0;
+            }
+
+            rectsArr[rectsArr.length-1].push({
+                frame: {x: 0, y: 0, w: img.width, h: img.height},
+                rotated: false,
+                trimmed: false,
+                spriteSourceSize: {x: 0, y: 0, w: img.width, h: img.height},
+                sourceSize: {w: img.width, h: img.height},
+                name: key,
+                image: img
             });
-            return;
         }
+
+        console.log(rectsArr);
+        console.log(rectsArr.length);
+
+        return;
 
         if(options.allowTrim) {
             Trimmer.trim(rects);
