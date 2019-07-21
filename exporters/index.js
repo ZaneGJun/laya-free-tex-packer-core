@@ -45,7 +45,7 @@ function prepareData(data, options) {
             name = name.split("/").pop();
         }
 
-        let frame = {x: item.frame.x, y: item.frame.y, w: item.frame.w, h: item.frame.h, hw: item.frame.w/2, hh: item.frame.h/2};
+        let frame = {x: item.frame.x, y: item.frame.y, w: item.frame.w, h: item.frame.h, hw: item.frame.w/2, hh: item.frame.h/2, idx: item.frame.idx};
         let spriteSourceSize = {x: item.spriteSourceSize.x, y: item.spriteSourceSize.y, w: item.spriteSourceSize.w, h: item.spriteSourceSize.h};
         let sourceSize = {w: item.sourceSize.w, h: item.sourceSize.h};
         

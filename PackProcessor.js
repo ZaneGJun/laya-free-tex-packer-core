@@ -69,8 +69,8 @@ class PackProcessor {
      */
     static pack(images={}, options={}, onComplete=null, onError=null) {
 
+        // let rectsArr = [[]];
         let rects = [];
-        let rectsArr = [[]];
 
         let padding = options.padding || 0;
         let extrude = options.extrude || 0;
@@ -112,6 +112,12 @@ class PackProcessor {
 			height = ph;
         }
 
+        let ic = 0;
+        for(let k in images){
+            ic += 1;
+        }
+        console.error("images: " + ic);
+        console.error("names: " + names.length);
         
         for(let key of names) {
             let img = images[key];
@@ -124,21 +130,21 @@ class PackProcessor {
 
             //check is reach max
             if(width < minWidth || height < minHeight) {
-                // if(onError) onError({
-                //     description: "Invalid size. Min: " + minWidth + "x" + minHeight
-                // });
-                // return;
+                if(onError) onError({
+                    description: "Invalid size. Min: " + minWidth + "x" + minHeight
+                });
+                return;
 
-                //add new rect to rectsArr
-                rectsArr.push([]);
+                // //add new rect to rectsArr
+                // rectsArr.push([]);
 
-                maxWidth = 0;
-                maxHeight = 0;
-                minWidth = 0;
-                minHeight = 0;
+                // maxWidth = 0;
+                // maxHeight = 0;
+                // minWidth = 0;
+                // minHeight = 0;
             }
 
-            rectsArr[rectsArr.length-1].push({
+            rects.push({
                 frame: {x: 0, y: 0, w: img.width, h: img.height},
                 rotated: false,
                 trimmed: false,
@@ -149,10 +155,7 @@ class PackProcessor {
             });
         }
 
-        console.log(rectsArr);
-        console.log(rectsArr.length);
-
-        return;
+        console.log("rects len:" + rects.length);
 
         if(options.allowTrim) {
             Trimmer.trim(rects);
@@ -175,7 +178,12 @@ class PackProcessor {
         let packerClass = options.packer || MaxRectsBinPack;
         let packerMethod = options.packerMethod || MaxRectsBinPack.methods.BestShortSideFit;
 
+        //console.log('packerClass: ' + packerClass.constructor.name);
+        console.log('packerMethod: ' + packerMethod);
+
         let res = [];
+
+        console.error("rects length:" + rects.length);
 
         while(rects.length) {
             let packer = new packerClass(width, height, options.allowRotation);
@@ -191,6 +199,8 @@ class PackProcessor {
             if(options.detectIdentical) {
                 result = PackProcessor.applyIdentical(result, identical);
             }
+
+            console.log("result length:" + result.length);
 
             res.push(result);
 
