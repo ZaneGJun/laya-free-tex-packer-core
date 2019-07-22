@@ -116,8 +116,8 @@ class PackProcessor {
         for(let k in images){
             ic += 1;
         }
-        console.error("images: " + ic);
-        console.error("names: " + names.length);
+        // console.error("images: " + ic);
+        // console.error("names: " + names.length);
         
         for(let key of names) {
             let img = images[key];
@@ -155,7 +155,7 @@ class PackProcessor {
             });
         }
 
-        console.log("rects len:" + rects.length);
+        // console.log("rects len:" + rects.length);
 
         if(options.allowTrim) {
             Trimmer.trim(rects);
@@ -178,12 +178,11 @@ class PackProcessor {
         let packerClass = options.packer || MaxRectsBinPack;
         let packerMethod = options.packerMethod || MaxRectsBinPack.methods.BestShortSideFit;
 
-        //console.log('packerClass: ' + packerClass.constructor.name);
-        console.log('packerMethod: ' + packerMethod);
+        console.log(`pack:${options.textureName} packerType: ${packerClass.type} packerMethod: ${packerMethod}`);
 
         let res = [];
 
-        console.error("rects length:" + rects.length);
+        // console.error("rects length:" + rects.length);
 
         while(rects.length) {
             let packer = new packerClass(width, height, options.allowRotation);
@@ -200,7 +199,7 @@ class PackProcessor {
                 result = PackProcessor.applyIdentical(result, identical);
             }
 
-            console.log("result length:" + result.length);
+            // console.log("result length:" + result.length);
 
             res.push(result);
 

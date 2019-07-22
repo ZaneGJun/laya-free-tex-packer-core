@@ -191,6 +191,10 @@ class FilesProcessor {
             imagePrefix: imagePrefix
         };
 
+        if(options.exporter.type == "LayaBox"){
+            opts.imageName = opts.imageName.split('\\').pop();
+        }
+
         files.push({
             name: fName + "." + options.exporter.fileExt,
             buffer: new Buffer(startExporter(options.exporter, allDatas, opts))
