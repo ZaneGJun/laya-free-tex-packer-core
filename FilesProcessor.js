@@ -26,7 +26,7 @@ class FilesProcessor {
                         if(packResult.length >= res.length) {
                             let ix = 0;
                             for(let item of packResult) {
-                                let fName = options.textureName + (packResult.length > 1 ? "_" + ix : "");
+                                let fName = options.textureName + (ix > 0 ? ix : "");
 
                                 //pack success, create the resutl texture item
                                 FilesProcessor.processPackResultItemTexture(fName, item, options, (files) => {
@@ -175,8 +175,12 @@ class FilesProcessor {
         let imagePrefix = fName.replace(options.inputPath + "\\", "") + "\\";
         imagePrefix = (imagePrefix.trim().split("\\").join("/"));
 
+        // console.log("processPackResultItemConf fName:" + fName);
+        let baseName = fName.split('\\').pop();
+        // console.log("processPackResultItemConf baseName:" + baseName);
+
         let opts = {
-            imageName: fName + "." + options.textureFormat,
+            imageName: baseName + "." + options.textureFormat,
             // imageData: buffer.toString("base64"),
             format: pixelFormat,
             textureFormat: options.textureFormat,
@@ -192,7 +196,12 @@ class FilesProcessor {
         };
 
         if(options.exporter.type == "LayaBox"){
-            opts.imageName = opts.imageName.split('\\').pop();
+            //如果图片不止1张
+            if(idx > 1){
+                for(let i=1;i<idx;i++){
+                    opts.imageName += "," + baseName + i + "." + options.textureFormat;
+                }
+            }
         }
 
         files.push({

@@ -118,6 +118,7 @@ class PackProcessor {
         }
         // console.error("images: " + ic);
         // console.error("names: " + names.length);
+        // console.error("images count:" + names.length);
         
         for(let key of names) {
             let img = images[key];
@@ -130,6 +131,7 @@ class PackProcessor {
 
             //check is reach max
             if(width < minWidth || height < minHeight) {
+                console.error("cause error image:" + key);
                 if(onError) onError({
                     description: "Invalid size. Min: " + minWidth + "x" + minHeight
                 });
