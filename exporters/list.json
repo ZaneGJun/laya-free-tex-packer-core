@@ -128,7 +128,7 @@
   {
     "type": "LayaBox",
     "description": "LayaBox format",
-    "allowTrim": false,
+    "allowTrim": true,
     "allowRotation": false,
     "template": "LayaBox.mst",
     "fileExt": "atlas",

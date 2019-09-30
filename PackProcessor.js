@@ -187,6 +187,7 @@ class PackProcessor {
         // console.error("rects length:" + rects.length);
 
         while(rects.length) {
+            //console.log("max w:" + width + " max h:" + height);
             let packer = new packerClass(width, height, options.allowRotation);
             let result = packer.pack(rects, packerMethod);
 

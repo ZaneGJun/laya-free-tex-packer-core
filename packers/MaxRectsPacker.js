@@ -24,7 +24,7 @@ class MaxRectsPacker extends Packer {
             square: (method === METHOD.Square || method === METHOD.SmartSquare)
         };
 
-        let packer = new MaxRectsPackerEngine(this.binWidth, this.binHeight, 0, options);
+        let packer = new MaxRectsPackerEngine(Number(this.binWidth), Number(this.binHeight), 0, options);
 
         let input = [];
         
