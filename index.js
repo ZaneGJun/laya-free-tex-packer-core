@@ -13,9 +13,11 @@ function fixPath(path) {
     return path.split("\\").join("/");
 }
 
-function loadImage(file, files) {
+function loadImage(file, files, scale) {
 	return Jimp.read(file.contents)
 		.then(image => {
+            image.scale(scale, Jimp.RESIZE_BEZIER);
+
 			image.name = fixPath(file.path);
 			image._base64 = file.contents.toString("base64");
 			image.width = image.bitmap.width;
@@ -95,7 +97,7 @@ module.exports = function(images, options, cb) {
 	let p = [];
 	
 	for(let file of images) {
-		p.push(loadImage(file, files));
+		p.push(loadImage(file, files, options.scale));
 	}
 	
 	Promise.all(p).then(() => {

@@ -117,25 +117,25 @@ class FilesProcessor {
 
         item.buffer.getBuffer(mime, (err, srcBuffer) => {
             FilesProcessor.tinifyImage(srcBuffer, options, (buffer) => {
-                let opts = {
-                    imageName: fName + "." + options.textureFormat,
-                    imageData: buffer.toString("base64"),
-                    format: pixelFormat,
-                    textureFormat: options.textureFormat,
-                    imageWidth: item.buffer.bitmap.width,
-                    imageHeight: item.buffer.bitmap.height,
-                    removeFileExtension: options.removeFileExtension,
-                    prependFolderName: options.prependFolderName,
-                    base64Export: options.base64Export,
-                    scale: options.scale,
-                    appInfo: options.appInfo,
-                    trimMode: options.trimMode,
-                    imagePrefix: imagePrefix
-                };
+                // let opts = {
+                //     imageName: fName + "." + options.textureFormat,
+                //     imageData: buffer.toString("base64"),
+                //     format: pixelFormat,
+                //     textureFormat: options.textureFormat,
+                //     imageWidth: item.buffer.bitmap.width,
+                //     imageHeight: item.buffer.bitmap.height,
+                //     removeFileExtension: options.removeFileExtension,
+                //     prependFolderName: options.prependFolderName,
+                //     base64Export: options.base64Export,
+                //     scale: options.scale,
+                //     appInfo: options.appInfo,
+                //     trimMode: options.trimMode,
+                //     imagePrefix: imagePrefix
+                // };
 
-                if(options.exporter.type == "LayaBox"){
-                    opts.imageName = opts.imageName.split('\\').pop();
-                }
+                // if(options.exporter.type == "LayaBox"){
+                //     opts.imageName = opts.imageName.split('\\').pop();
+                // }
                 
                 //call startExporter, create the export file
                 // files.push({

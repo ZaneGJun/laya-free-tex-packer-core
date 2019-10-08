@@ -23,6 +23,6 @@
   "meta": {
     "image": "{{^config.base64Export}}{{config.imageName}}{{/config.base64Export}}{{#config.base64Export}}{{{config.base64Prefix}}}{{{config.imageData}}}{{/config.base64Export}}",
     "prefix": "{{&config.imagePrefix}}",
-    "scale": {{config.scale}}
+    "scale": "{{config.scale}}"
   }
 }
