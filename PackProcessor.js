@@ -160,6 +160,7 @@ class PackProcessor {
         // console.log("rects len:" + rects.length);
 
         if(options.allowTrim) {
+            console.log("allowTrim, do trim");
             Trimmer.trim(rects);
         }
 

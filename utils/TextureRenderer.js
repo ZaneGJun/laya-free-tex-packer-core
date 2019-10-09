@@ -1,4 +1,5 @@
 let Jimp = require("jimp");
+let chalk = require('chalk');
 
 class TextureRenderer {
     

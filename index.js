@@ -4,6 +4,24 @@ let getFilterByType = require("./filters").getFilterByType;
 let FilesProcessor = require("./FilesProcessor");
 let appInfo = require('./package.json');
 let Jimp = require("jimp");
+let path = require('path');
+let fs = require('fs');
+let fse = require('fs-extra');
+let chalk = require('chalk');
+
+function copyFolderOrFile(src, dest) {
+    fse.copy(src, dest, err => {
+        if (err){
+            console.log(chalk.redBright(err));
+        }
+
+        console.log(chalk.greenBright("copy: " + src + " to: " + dest + " success!"));
+    });
+}
+
+function isExists(path) {
+    return fs.existsSync(path);
+}
 
 function getErrorDescription(txt) {
     return appInfo.name + ": " + txt;
@@ -13,17 +31,21 @@ function fixPath(path) {
     return path.split("\\").join("/");
 }
 
-function loadImage(file, files, scale) {
+function loadImage(file, files, scale, maxWidth, maxHeight, oversizeList) {
 	return Jimp.read(file.contents)
 		.then(image => {
-            image.scale(scale, Jimp.RESIZE_BEZIER);
+            if(image.bitmap.width > maxWidth || image.bitmap.height > maxHeight){
+                oversizeList.push(file.dir);
+            }else{
+                image.scale(scale, Jimp.RESIZE_BEZIER);
 
-			image.name = fixPath(file.path);
-			image._base64 = file.contents.toString("base64");
-			image.width = image.bitmap.width;
-            image.height = image.bitmap.height;
-            image.area = image.bitmap.width * image.bitmap.height;
-			files[image.name] = image;
+                image.name = fixPath(file.path);
+                image._base64 = file.contents.toString("base64");
+                image.width = image.bitmap.width;
+                image.height = image.bitmap.height;
+                image.area = image.bitmap.width * image.bitmap.height;
+                files[image.name] = image;
+            }
 		})
 		.catch(e => {
 			console.error(getErrorDescription("Error reading " + file.path));
@@ -94,13 +116,25 @@ module.exports = function(images, options, cb) {
     options.filter = filter;
 	
 	let files = {};
-	let p = [];
+    let p = [];
+    let oversizeList = [];
 	
 	for(let file of images) {
-		p.push(loadImage(file, files, options.scale));
-	}
-	
+		p.push(loadImage(file, files, options.scale, options.maxSpriteWidth, options.maxSpriteHeight, oversizeList));
+    }
+    
 	Promise.all(p).then(() => {
+        //复制超出大小的图片到输出目录
+        for(let file of oversizeList){
+            console.log(chalk.yellowBright("oversize file:" + file));
+            let out = path.resolve(options.outputPath, file.replace(options.inputPath + "\\", ""));
+            let outDir = path.dirname(out);
+            if(!isExists(outDir)) {
+                fs.mkdirSync(outDir, { recursive: true });
+            }
+            copyFolderOrFile(file, out);
+        }
+
 		FilesProcessor.start(files, options, 
 			(res) => {
 				if(cb) cb(res);
