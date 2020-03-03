@@ -31,13 +31,13 @@ function fixPath(path) {
     return path.split("\\").join("/");
 }
 
-function loadImage(file, files, scale, maxWidth, maxHeight, oversizeList) {
+function loadImage(file, files, scale, scaleMethod, maxWidth, maxHeight, oversizeList) {
 	return Jimp.read(file.contents)
 		.then(image => {
             if(image.bitmap.width > maxWidth || image.bitmap.height > maxHeight){
                 oversizeList.push(file.dir);
             }else{
-                image.scale(scale, Jimp.RESIZE_BEZIER);
+                image.scale(scale, scaleMethod);
 
                 image.name = fixPath(file.path);
                 image._base64 = file.contents.toString("base64");
@@ -72,6 +72,7 @@ module.exports = function(images, options, cb) {
     options.textureFormat = options.textureFormat === undefined ? "png" : options.textureFormat;
     options.base64Export = options.base64Export === undefined ? false : options.base64Export;
     options.scale = options.scale === undefined ? 1 : options.scale;
+    options.scaleMethod = options.scaleMethod === undefined ? Jimp.RESIZE_BILINEAR : options.scaleMethod;
     options.tinify = options.tinify === undefined ? false : options.tinify;
     options.tinifyKey = options.tinifyKey === undefined ? "" : options.tinifyKey;
     options.filter = options.filter === undefined ? "none" : options.filter;
@@ -120,7 +121,7 @@ module.exports = function(images, options, cb) {
     let oversizeList = [];
 	
 	for(let file of images) {
-		p.push(loadImage(file, files, options.scale, options.maxSpriteWidth, options.maxSpriteHeight, oversizeList));
+		p.push(loadImage(file, files, options.scale, options.scaleMethod, options.maxSpriteWidth, options.maxSpriteHeight, oversizeList));
     }
     
 	Promise.all(p).then(() => {
