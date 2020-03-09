@@ -89,7 +89,11 @@ class PackProcessor {
 
         //sort by image area
         names.sort((a, b) => {
-            return images[a].area - images[b].area;
+            if(images[a].area != images[b].area){
+                return images[a].area - images[b].area;
+            }else{
+                return (images[a].name.length + images[a].nameValue) - (images[b].nameValue + images[b].name.length);
+            }
         });
 
         let width = options.width || 0;

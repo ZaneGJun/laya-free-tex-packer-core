@@ -31,6 +31,20 @@ function fixPath(path) {
     return path.split("\\").join("/");
 }
 
+function getStringValue(str){
+    let value = 0;
+    try{
+        let len = str.length;
+        for(let i=0;i<len;i++){
+            value += str.charCodeAt(i);
+        }
+    }catch(e){
+        console.error(e);
+        return 0;
+    }
+    return value;
+}
+
 function loadImage(file, files, scale, scaleMethod, maxWidth, maxHeight, oversizeList) {
 	return Jimp.read(file.contents)
 		.then(image => {
@@ -40,6 +54,7 @@ function loadImage(file, files, scale, scaleMethod, maxWidth, maxHeight, oversiz
                 image.scale(scale, scaleMethod);
 
                 image.name = fixPath(file.path);
+                image.nameValue = getStringValue(image.name);
                 image._base64 = file.contents.toString("base64");
                 image.width = image.bitmap.width;
                 image.height = image.bitmap.height;
